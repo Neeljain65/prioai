@@ -1,11 +1,34 @@
-const express = require('express')
-const app = express()
-const port = 8000
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const express = require("express");
+const bodyParser = require("body-parser");
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const app = express();
+const PORT = 6969;
+const indexRouter = require("./Router/index");
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+dotenv.config();
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.json());
+
+
+try {
+    mongoose.connect(process.env.MONGO_URL);
+    console.log("Connection Successfull");
+} catch (error) {
+    console.log(error);
+}
+
+app.use("/api", indexRouter);
+app.get("/", (req, res) => {
+    res.send("Server Is Running");
+});
+
+
+
+
+app.listen(PORT, () => {
+    console.log(`Server Running on Port ${PORT}`);
 })
